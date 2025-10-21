@@ -101,8 +101,10 @@ if __name__ == '__main__':
     view.add_fleet([aircraft, cruiser, destroyer, submarine, torpedo])
     view.show()
 
-    # Example of shooting with user input
-    x = get_user_input("Enter x coordinate: ")
-    y = get_user_input("Enter y coordinate: ")
-    view.shoot(x, y)
-    view.show()
+    while True:
+        x = get_user_input("Enter x coordinate (or -1 to quit): ")
+        if x == -1:
+            break
+        y = get_user_input("Enter y coordinate: ")
+        view.shoot(x, y)
+        view.show()

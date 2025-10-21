@@ -1,6 +1,17 @@
 #!/usr/bin/env python
 #  -*- coding: utf-8 -*-
 
+def is_valid_integer(int_str):
+    """Retourne True si int_str représente un nombre entier valide :
+    supprime les éventuels espaces en début et fin de chaîne → cleaned_int_str
+    détermine l'indice de départ dans cleaned_int_str du nombre entier
+    en admettant qu'un signe puisse être présent en premier caractère,
+    immédiatement suivi par la valeur absolue du nombre
+    """
+    cleaned_int_str = int_str.strip()
+    int_index = 1 if cleaned_int_str[0] in ('-', '+') else 0
+    return cleaned_int_str[int_index:].isdigit()
+
 
 class Game:
     def __init__(self, size: int):
@@ -67,6 +78,14 @@ class Board:
         else:
             print("Invalid coordinates!")
 
+def get_user_input(prompt):
+    while True:
+        user_input = input(prompt)
+        if is_valid_integer(user_input):
+            return int(user_input)
+        else:
+            print("Invalid input. Please enter a valid integer.")
+
 
 if __name__ == '__main__':
     size = 9
@@ -82,6 +101,8 @@ if __name__ == '__main__':
     view.add_fleet([aircraft, cruiser, destroyer, submarine, torpedo])
     view.show()
 
-    # Example of shooting
-    view.shoot(2, 2)
+    # Example of shooting with user input
+    x = get_user_input("Enter x coordinate: ")
+    y = get_user_input("Enter y coordinate: ")
+    view.shoot(x, y)
     view.show()

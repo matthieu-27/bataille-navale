@@ -30,6 +30,7 @@ class Boat:
         self.length = length
         self.orientation = orientation
         self.position = Coordinates(x, y)
+        self.hits = 0
 
 
 class Board:
@@ -38,6 +39,7 @@ class Board:
         N = self.game.size
         self.view = [["~" for _ in range(N + 1)] for _ in range(N + 1)]
         self.boats = []  # type: ignore
+
 
 
     def show(self):
@@ -72,11 +74,26 @@ class Board:
             if self.view[x][y] == "X":
                 self.view[x][y] = "H"  # Hit
                 print(f"Hit at ({x}, {y})!")
+                self.check_boat_hit(x, y)
             else:
                 self.view[x][y] = "M"  # Miss
                 print(f"Miss at ({x}, {y})!")
         else:
             print("Invalid coordinates!")
+
+    def check_boat_hit(self, x: int, y: int):
+        for boat in self.boats:
+            if boat.orientation == 0:  # Horizontal
+                if boat.position.y == y and boat.position.x <= x < boat.position.x + boat.length:
+                    boat.hits += 1
+                    if boat.hits == boat.length:
+                        print(f"Boat at ({boat.position.x}, {boat.position.y}) is sunk!")
+            else:  # Vertical
+                if boat.position.x == x and boat.position.y <= y < boat.position.y + boat.length:
+                    boat.hits += 1
+                    if boat.hits == boat.length:
+                        print(f"Boat at ({boat.position.x}, {boat.position.y}) is sunk!")
+
 
 def get_user_input(prompt):
     while True:

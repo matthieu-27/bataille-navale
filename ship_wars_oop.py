@@ -1,15 +1,18 @@
 #!/usr/bin/env python
 #  -*- coding: utf-8 -*-
 
+
 class Game:
     def __init__(self, size: int):
         self.size = size
-        self.board = [[" " for _ in range(size)] for _ in range(size)]
+        self.board = [["~" for _ in range(size)] for _ in range(size)]
+
 
 class Coordinates:
     def __init__(self, x: int, y: int):
         self.x = x
         self.y = y
+
 
 class Boat:
     def __init__(self, length: int, orientation: int, x: int, y: int):
@@ -17,12 +20,14 @@ class Boat:
         self.orientation = orientation
         self.position = Coordinates(x, y)
 
+
 class Board:
     def __init__(self, game: Game):
         self.game = game
         N = self.game.size
-        self.view = [[" " for _ in range(N + 1)] for _ in range(N + 1)]
+        self.view = [["~" for _ in range(N + 1)] for _ in range(N + 1)]
         self.boats = []  # type: ignore
+
 
     def show(self):
         # Add column labels
@@ -31,6 +36,7 @@ class Board:
             if i < self.game.size:
                 # Add row labels
                 print(chr(65 + i) + " " + " ".join(row[1:]))
+
 
     def add_boat(self, boat: Boat):
         if boat.orientation == 0:  # Horizontal
@@ -44,9 +50,23 @@ class Board:
                     self.view[boat.position.x][y] = "X"
             self.boats.append(boat)
 
+
     def add_fleet(self, boats):
         for boat in boats:
             self.add_boat(boat)
+
+
+    def shoot(self, x: int, y: int):
+        if 0 <= x < self.game.size and 0 <= y < self.game.size:
+            if self.view[x][y] == "X":
+                self.view[x][y] = "H"  # Hit
+                print(f"Hit at ({x}, {y})!")
+            else:
+                self.view[x][y] = "M"  # Miss
+                print(f"Miss at ({x}, {y})!")
+        else:
+            print("Invalid coordinates!")
+
 
 if __name__ == '__main__':
     size = 9
@@ -60,4 +80,8 @@ if __name__ == '__main__':
     submarine = Boat(3, 0, 8, 5)
     torpedo = Boat(2, 0, 5, 9)
     view.add_fleet([aircraft, cruiser, destroyer, submarine, torpedo])
+    view.show()
+
+    # Example of shooting
+    view.shoot(2, 2)
     view.show()
